@@ -1,4 +1,14 @@
 # PowerBI-Calendar-DAX
+
+##Como Utilizar
+### 1. Crie a Tabela Calendário:
+No Power BI Desktop, abra a guia Modelagem e clique em Nova Tabela. Copie e cole o código da criação da tabela dCALENDARIO (ajustando 'Tabela'[coluna_data] conforme seu modelo).
+
+### 2. Crie as Colunas Calculadas:
+Com a tabela dCALENDARIO criada, vá na mesma guia e adicione as colunas calculadas utilizando os códigos fornecidos.
+
+### 3. Atualize seu Modelo:
+Após a criação, a tabela calendário estará disponível para relacionamentos e análises em seu modelo Power BI.
 # Power BI DAX: Tabela de Calendário
 
 Este projeto contém scripts DAX para criar uma tabela de calendário no Power BI, com colunas calculadas úteis para análises temporais.
@@ -30,28 +40,15 @@ As seguintes colunas calculadas são criadas a partir da tabela calendário:
 - **Offset Mês:** Calcula a diferença, em meses, entre a data e o mês atual.
 - **Offset Ano:** Calcula a diferença, em anos, entre a data e o ano atual.
 
-## Código DAX
+## Requisitos
 
-O arquivo `src/CalendarTable-DAX.txt` contém os códigos completos abaixo:
+- Power BI Desktop
+- Modelo de dados com uma coluna de data (`'Tabela'[coluna_data]`)
+---
+- A tabela de calendário pode ser relacionada com outras tabelas para análises mais avançadas
+
+## Licença
+
+Este projeto está licenciado sob a [MIT License](LICENSE).
 
 ---
-
-### Criação da Tabela Calendário
-
-```dax
-dCALENDARIO =
-    ADDCOLUMNS(
-        CALENDAR(DATE(2020, 01, 01), MAX('Tabela'[coluna_data])),
-        "Ano", YEAR([Date]),
-        "Trim", FORMAT([Date], "q"),
-        "Mês", MONTH([Date]),
-        "Dia", DAY([Date]),
-        "Dia Nome", CONCATENATE(UPPER(LEFT(FORMAT([Date], "ddd"), 1)), MID(FORMAT([Date], "ddd"), 2, 2)),
-        "Dia Semana", WEEKDAY([Date]),
-        "Semana Ano", WEEKNUM([Date]),
-        "Mês Nome", CONCATENATE(UPPER(LEFT(FORMAT([Date], "mmmm"), 1)), MID(FORMAT([Date], "mmmm"), 2, 9)),
-        "Mês Abrev", CONCATENATE(UPPER(LEFT(FORMAT([Date], "mmm"), 1)), MID(FORMAT([Date], "mmm"), 2, 2)),
-        "Mês Ano", FORMAT(MONTH([Date]), "00") & "/" & YEAR([Date]),
-        "Mês Abrev Ano", CONCATENATE(UPPER(LEFT(FORMAT([Date], "mmm"), 1)), MID(FORMAT([Date], "mmm"), 2, 2)) & "/" & YEAR([Date]),
-        "Trim Ano", FORMAT([Date], "q") & "T" & YEAR([Date])
-    )

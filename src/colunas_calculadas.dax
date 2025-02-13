@@ -1,0 +1,11 @@
+// Colunas Calculadas
+# Selecione a tabela dCALENDARIO, Nova Coluna e crie as 3 colunas abaixo:
+
+// Retorna o primeiro dia do mês para a data
+Data Base = STARTOFMONTH(dCALENDARIO[Date])
+
+// Calcula a diferença em meses entre a data e a data de hoje
+Offset Mês = ((YEAR('dCALENDARIO'[Date]) * 12) + MONTH('dCALENDARIO'[Date])) - ((YEAR(TODAY()) * 12) + MONTH(TODAY()))
+
+// Calcula a diferença em anos entre a data e o ano atual
+Offset Ano = YEAR('dCALENDARIO'[Date]) - YEAR(TODAY())

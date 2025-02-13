@@ -1,0 +1,19 @@
+// Criação da Tabela Calendário
+# Clique em Nova Tabela e cole o código abaixo adaptando a data_mínima e a data_máxima a sua base:
+
+dCALENDARIO =
+    ADDCOLUMNS(
+        CALENDAR(DATE(2020, 01, 01), MAX('Tabela'[coluna_data])),
+        "Ano", YEAR([Date]),
+        "Trim", FORMAT([Date], "q"),
+        "Mês", MONTH([Date]),
+        "Dia", DAY([Date]),
+        "Dia Nome", CONCATENATE(UPPER(LEFT(FORMAT([Date], "ddd"), 1)), MID(FORMAT([Date], "ddd"), 2, 2)),
+        "Dia Semana", WEEKDAY([Date]),
+        "Semana Ano", WEEKNUM([Date]),
+        "Mês Nome", CONCATENATE(UPPER(LEFT(FORMAT([Date], "mmmm"), 1)), MID(FORMAT([Date], "mmmm"), 2, 9)),
+        "Mês Abrev", CONCATENATE(UPPER(LEFT(FORMAT([Date], "mmm"), 1)), MID(FORMAT([Date], "mmm"), 2, 2)),
+        "Mês Ano", FORMAT(MONTH([Date]), "00") & "/" & YEAR([Date]),
+        "Mês Abrev Ano", CONCATENATE(UPPER(LEFT(FORMAT([Date], "mmm"), 1)), MID(FORMAT([Date], "mmm"), 2, 2)) & "/" & YEAR([Date]),
+        "Trim Ano", FORMAT([Date], "q") & "T" & YEAR([Date])
+    )
