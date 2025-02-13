@@ -1,6 +1,6 @@
 # PowerBI-Calendar-DAX
 
-##Como Utilizar
+## Como Utilizar
 ### 1. Crie a Tabela Calendário:
 No Power BI Desktop, abra a guia Modelagem e clique em Nova Tabela. Copie e cole o código da criação da tabela dCALENDARIO (ajustando 'Tabela'[coluna_data] conforme seu modelo).
 
