@@ -1,19 +1,46 @@
 // Criação da Tabela Calendário
-# Clique em Nova Tabela e cole o código abaixo adaptando a data_mínima e a data_máxima a sua base:
+# Clique em Nova Tabela e cole o código abaixo adaptando a StartDate e a EndDate a sua base:
 
-dCALENDARIO =
-    ADDCOLUMNS(
-        CALENDAR(DATE(2020, 01, 01), MAX('Tabela'[coluna_data])),
-        "Ano", YEAR([Date]),
-        "Trim", FORMAT([Date], "q"),
-        "Mês", MONTH([Date]),
-        "Dia", DAY([Date]),
-        "Dia Nome", CONCATENATE(UPPER(LEFT(FORMAT([Date], "ddd"), 1)), MID(FORMAT([Date], "ddd"), 2, 2)),
-        "Dia Semana", WEEKDAY([Date]),
-        "Semana Ano", WEEKNUM([Date]),
-        "Mês Nome", CONCATENATE(UPPER(LEFT(FORMAT([Date], "mmmm"), 1)), MID(FORMAT([Date], "mmmm"), 2, 9)),
-        "Mês Abrev", CONCATENATE(UPPER(LEFT(FORMAT([Date], "mmm"), 1)), MID(FORMAT([Date], "mmm"), 2, 2)),
-        "Mês Ano", FORMAT(MONTH([Date]), "00") & "/" & YEAR([Date]),
-        "Mês Abrev Ano", CONCATENATE(UPPER(LEFT(FORMAT([Date], "mmm"), 1)), MID(FORMAT([Date], "mmm"), 2, 2)) & "/" & YEAR([Date]),
-        "Trim Ano", FORMAT([Date], "q") & "T" & YEAR([Date])
-    )
+dCalendario = 
+VAR StartDate = DATE(2018, 1, 1)
+VAR EndDate = DATE(YEAR(TODAY())+10, 1, 1)
+RETURN
+ADDCOLUMNS (
+    CALENDAR(StartDate, EndDate),
+    "Ano", YEAR([Date]),
+    "Ano Fiscal", IF(MONTH([Date]) >= 10, YEAR([Date]) + 1, YEAR([Date])),
+    "Mês Número", MONTH([Date]),
+    "Mês Nome", UPPER(LEFT(FORMAT([Date], "MMMM"), 1))&RIGHT(FORMAT([Date], "MMMM"), LEN(FORMAT([Date], "MMMM"))-1),
+    "AnoMêsNumérico", YEAR([Date]) * 100 + MONTH([Date]),
+    "AnoMêsTexto", FORMAT([Date], "YYYY/MM"),
+    "Trimestre", "Q" & FORMAT(ROUNDUP(MONTH([Date]) / 3, 0), "0"),
+    "Trimestre Fiscal", 
+        SWITCH(TRUE(),
+            MONTH([Date]) IN {10, 11, 12}, "Q1",
+            MONTH([Date]) IN {1, 2, 3}, "Q2",
+            MONTH([Date]) IN {4, 5, 6}, "Q3",
+            "Q4"
+        ),
+    "Semestre", "S" & FORMAT(ROUNDUP(MONTH([Date]) / 6, 0), "0"),
+    "Semana ISO", WEEKNUM([Date], 2),
+    "Dia", DAY([Date]),
+    "Dia da Semana", WEEKDAY([Date], 2),
+    "Dia da Semana Nome", UPPER(LEFT(FORMAT([Date], "dddd"),1))&RIGHT(FORMAT([Date], "dddd"), LEN(FORMAT([Date], "dddd"))-1),
+    "É Final de Semana", IF(WEEKDAY([Date], 2) > 5, TRUE(), FALSE()),
+    "É Dia Útil", IF(WEEKDAY([Date], 2) <= 5, TRUE(), FALSE()),
+    "É Hoje", IF([Date] = TODAY(), TRUE(), FALSE()),
+    "É Início do Mês", IF(DAY([Date]) = 1, TRUE(), FALSE()),
+    "É Fim do Mês", IF([Date] = EOMONTH([Date], 0), TRUE(), FALSE()),
+    "Início da Semana", [Date] - WEEKDAY([Date], 2) + 1,
+    "Fim da Semana", [Date] - WEEKDAY([Date], 2) + 7,
+    "Mês Offset", DATEDIFF(DATE(2010,1,1), [Date], MONTH),
+    "Ano Offset", DATEDIFF(DATE(2010,1,1), [Date], YEAR),
+    "Sazonalidade",
+        SWITCH(TRUE(),
+            MONTH([Date]) IN {1, 12}, "Alta",
+            MONTH([Date]) IN {2, 3, 6}, "Baixa",
+            MONTH([Date]) IN {4, 5, 7, 8}, "Média",
+            "Normal"
+        ),
+    "Idade (dias)", DATEDIFF([Date], TODAY(), DAY)
+)
